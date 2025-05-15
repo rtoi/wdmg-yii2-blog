@@ -87,9 +87,9 @@ if (isset(Yii::$app->translations) && class_exists('\wdmg\translations\FlagsAsse
                 'attribute' => 'description',
                 'format' => 'raw',
                 'value' => function($model) {
-                    $output = mb_strimwidth(strip_tags($model->description), 0, 64, '…');
+                    $output = mb_strimwidth(strip_tags($model->description ?? ''), 0, 64, '…');
 
-                    if (mb_strlen($model->description) > 161)
+                    if (mb_strlen($model->description ?? '') > 161)
                         $output .= '&nbsp;' . Html::tag('span', Html::tag('span', '', [
                                 'class' => 'fa fa-fw fa-exclamation-triangle',
                                 'title' => Yii::t('app/modules/blog','Field exceeds the recommended length of {length} characters.', [
@@ -104,9 +104,9 @@ if (isset(Yii::$app->translations) && class_exists('\wdmg\translations\FlagsAsse
                 'attribute' => 'keywords',
                 'format' => 'raw',
                 'value' => function($model) {
-                    $output = mb_strimwidth(strip_tags($model->keywords), 0, 64, '…');
+                    $output = mb_strimwidth(strip_tags($model->keywords ?? ''), 0, 64, '…');
 
-                    if (mb_strlen($model->keywords) > 181)
+                    if (mb_strlen($model->keywords ?? '') > 181)
                         $output .= '&nbsp;' . Html::tag('span', Html::tag('span', '', [
                                 'class' => 'fa fa-fw fa-exclamation-triangle',
                                 'title' => Yii::t('app/modules/blog','Field exceeds the recommended length of {length} characters.', [
