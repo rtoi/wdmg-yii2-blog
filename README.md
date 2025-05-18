@@ -43,19 +43,23 @@ In any case, you can execute the migration and create the initial data, run the 
 `$ php yii migrate --migrationPath=@vendor/wdmg/yii2-blog/migrations`
 
 # Configure
-To add a module to the project, add the following data in your configuration file:
+To use this module as a standalone extension, add the following data in your configuration file:
 
     'modules' => [
         ...
         'blog' => [
             'class' => 'wdmg\blog\Module',
-            'routePrefix' => 'admin',
+            'routePrefix' => '',
+            'defaultController' => "blog/default",
             'baseRoute'  => '/blog', // route for frontend (string or array), use "/" - for root
             'baseLayout' => '@app/views/layouts/main', // the default layout to render blog
             'imagePath' => '/uploads/blog' // the default path to save blog thumbnails in @webroot
         ],
         ...
     ],
+
+
+    $config['bootstrap'][] = 'blog';
 
 
 # Routing

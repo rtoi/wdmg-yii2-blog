@@ -102,8 +102,9 @@ class Module extends BaseModule
         // Normalize path to image folder
         $this->imagePath = \yii\helpers\FileHelper::normalizePath($this->imagePath);
 
-        if (isset(Yii::$app->params["blog.defaultController"]))
+        if (isset(Yii::$app->params["blog.defaultController"])) {
             $this->defaultController = Yii::$app->params["blog.defaultController"];
+        }
     }
 
     /**
@@ -113,7 +114,7 @@ class Module extends BaseModule
     {
         $items = [
             'label' => $this->name,
-            'url' => [$this->routePrefix . '/'. $this->id],
+            'url' => [$this->routePrefix . '/' . $this->id],
             'icon' => 'fa fa-fw fa-feather-alt',
             'active' => in_array(\Yii::$app->controller->module->id, [$this->id]),
             'items' => [
@@ -135,19 +136,18 @@ class Module extends BaseModule
             ]
         ];
 
-	    if (!is_null($options)) {
+        if (!is_null($options)) {
+            if (isset($options['count'])) {
+                $items['label'] .= '<span class="badge badge-default float-right">' . $options['count'] . '</span>';
+                unset($options['count']);
+            }
 
-		    if (isset($options['count'])) {
-			    $items['label'] .= '<span class="badge badge-default float-right">' . $options['count'] . '</span>';
-			    unset($options['count']);
-		    }
+            if (is_array($options)) {
+                $items = \wdmg\helpers\ArrayHelper::merge($items, $options);
+            }
+        }
 
-		    if (is_array($options))
-			    $items = \wdmg\helpers\ArrayHelper::merge($items, $options);
-
-	    }
-
-	    return $items;
+        return $items;
     }
 
     /**
@@ -158,7 +158,6 @@ class Module extends BaseModule
         parent::bootstrap($app);
 
         if (!$this->isBackend() && !is_null($this->defaultController)) {
-
             // Get language scheme if available
             $custom = false;
             $hide = false;
@@ -172,7 +171,6 @@ class Module extends BaseModule
             // Add routes for frontend
             switch ($scheme) {
                 case "after":
-
                     $app->getUrlManager()->addRules([
                         $this->baseRoute . '/<alias:[\w-]+>/<lang:\w+>' => $this->defaultController . '/view',
                         $this->baseRoute . '/<lang:\w+>' => $this->defaultController . '/index',
@@ -188,7 +186,6 @@ class Module extends BaseModule
                     break;
 
                 case "query":
-
                     $app->getUrlManager()->addRules([
                         $this->baseRoute . '/<alias:[\w-]+>' => $this->defaultController . '/view',
                         $this->baseRoute => $this->defaultController . '/index',
@@ -197,18 +194,16 @@ class Module extends BaseModule
                     break;
 
                 case "subdomain":
-
                     if ($host = $app->getRequest()->getHostName()) {
                         $app->getUrlManager()->addRules([
-                            'http(s)?://' . $host. '/' . $this->baseRoute . '/<alias:[\w-]+>' => $this->defaultController . '/view',
-                            'http(s)?://' . $host. '/' . $this->baseRoute => $this->defaultController . '/index',
+                            'http(s)?://' . $host . '/' . $this->baseRoute . '/<alias:[\w-]+>' => $this->defaultController . '/view',
+                            'http(s)?://' . $host . '/' . $this->baseRoute => $this->defaultController . '/index',
                         ], true);
                     }
 
                     break;
 
                 default:
-
                     $app->getUrlManager()->addRules([
                         '/<lang:\w+>' . $this->baseRoute . '/<alias:[\w-]+>' => $this->defaultController . '/view',
                         '/<lang:\w+>' . $this->baseRoute => $this->defaultController . '/index',
@@ -234,10 +229,11 @@ class Module extends BaseModule
     {
         parent::install();
         $path = Yii::getAlias('@webroot') . $this->imagePath;
-        if (\yii\helpers\FileHelper::createDirectory($path, $mode = 0775, $recursive = true))
+        if (\yii\helpers\FileHelper::createDirectory($path, $mode = 0775, $recursive = true)) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /**
@@ -247,9 +243,10 @@ class Module extends BaseModule
     {
         parent::uninstall();
         $path = Yii::getAlias('@webroot') . $this->imagePath;
-        if (\yii\helpers\FileHelper::removeDirectory($path))
+        if (\yii\helpers\FileHelper::removeDirectory($path)) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 }
